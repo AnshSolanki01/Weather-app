@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="day">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced Weather App — live forecasts, rain chance, and city compare.">
+    <title>{% block title %}Weather App{% endblock %}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'weather/css/style.css' %}">
+</head>
+<body class="{% if is_night %}theme-night{% else %}theme-day{% endif %}">
+    <div
+        class="city-backdrop{% if background_url %} has-photo{% endif %}"
+        id="city-backdrop"
+        {% if background_url %}style="--city-photo: url('{{ background_url }}');"{% endif %}
+        aria-hidden="true"
+    >
+        <div class="backdrop-overlay"></div>
+        <div class="backdrop-orbs">
+            <span class="orb orb-1"></span>
+            <span class="orb orb-2"></span>
+            <span class="orb orb-3"></span>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        window.WEATHER_APP = {
+            citiesUrl: "{% url 'weather:city_suggest' %}",
+            weather: {{ weather_json|safe }}
+        };
+    </script>
+    <script src="{% static 'weather/js/script.js' %}"></script>
+</body>
+</html>
